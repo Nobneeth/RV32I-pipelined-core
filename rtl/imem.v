@@ -1,12 +1,16 @@
-module imem (
-    input clk,
+module imem #(
+    parameter WORDS   = 256,              // number of 32-bit words
+    parameter MEMFILE = "riscvtest.txt"   // program image loaded at power-up
+)(
+    input clk,                            // unused: read-only, combinational
     input [31:0]a,
     output [31:0]rd
 );
 
-reg [31:0]RAM[0:63];//64 lines of 32 bit words
-initial $readmemh("riscvtest.txt",RAM);
-assign rd=RAM[a[7:2]];
+localparam AW = $clog2(WORDS);           // word-index width, e.g. 256 words -> 8 bits
 
-//read only. cannotwrite
+reg [31:0]RAM[0:WORDS-1];
+initial $readmemh(MEMFILE,RAM);
+assign rd=RAM[a[AW+1:2]];
+
 endmodule

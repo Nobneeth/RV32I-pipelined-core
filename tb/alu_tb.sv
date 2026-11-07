@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module alu_tb ();
-    logic [31:0]a,b,ALUresult;
+    logic [31:0]a,b,ALUResult;
     logic [3:0] ALUControl;
     logic lt,ltu, eq;
 
@@ -9,8 +9,8 @@ module alu_tb ();
     task automatic check(input logic [3:0] ctrl, input logic [31:0] ta, tb_, exp);
     a = ta; b = tb_; ALUControl= ctrl; 
     #1
-    assert (ALUresult===exp) 
-    else   $error("wrong output %h, expected output %h",ALUresult,exp);
+    assert (ALUResult===exp) 
+    else   $error("wrong output %h, expected output %h",ALUResult,exp);
     endtask
 
     initial begin

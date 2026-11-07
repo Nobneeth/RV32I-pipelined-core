@@ -8,7 +8,7 @@ module alu (
     input [31:0] a,
     input [31:0] b,
     input [3:0] ALUControl,
-    output reg [31:0] ALUresult,//will be synthesized to wire if default given.
+    output reg [31:0] ALUResult,//will be synthesized to wire if default given.
     output lt, output eq, output ltu
 );
     //ALU is purely combinational block
@@ -22,20 +22,20 @@ module alu (
     assign ltu = (a<b);
     always @(*) begin
         case (ALUControl)
-            4'd0: ALUresult = a+b;
-            4'd8: ALUresult = a-b;
-            4'd7: ALUresult = a&b;
-            4'd6: ALUresult = a|b;
-            4'd4: ALUresult = a^b;
-            4'd2: ALUresult = {31'd0,lt};
-            4'd3: ALUresult = {31'd0,ltu};
-            4'd5: ALUresult = a >> b[4:0];
-            4'd1: ALUresult = a << b[4:0];
-            4'd13: ALUresult = $signed(a) >>> b[4:0];
+            4'd0: ALUResult = a+b;
+            4'd8: ALUResult = a-b;
+            4'd7: ALUResult = a&b;
+            4'd6: ALUResult = a|b;
+            4'd4: ALUResult = a^b;
+            4'd2: ALUResult = {31'd0,lt};
+            4'd3: ALUResult = {31'd0,ltu};
+            4'd5: ALUResult = a >> b[4:0];
+            4'd1: ALUResult = a << b[4:0];
+            4'd13: ALUResult = $signed(a) >>> b[4:0];
 
             //IMMsrc neeeded would be {instr[5]|funct3==101 &instr[30],funct3(instr[14:12])}
             //>>> works only for signed expression
-            default: ALUresult = 0;//did not want to infer latches
+            default: ALUResult = 0;//did not want to infer latches
         endcase
     end
 
