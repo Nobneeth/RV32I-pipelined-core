@@ -23,15 +23,17 @@ module alu (
     always @(*) begin
         case (ALUControl)
             4'd0: ALUresult = a+b;
-            4'd1: ALUresult = a-b;
-            4'd2: ALUresult = a&b;
-            4'd3: ALUresult = a|b;
+            4'd8: ALUresult = a-b;
+            4'd7: ALUresult = a&b;
+            4'd6: ALUresult = a|b;
             4'd4: ALUresult = a^b;
-            4'b0101: ALUresult = {31'd0,lt};
-            4'b1101: ALUresult = {31'd0,ltu};
-            4'd8: ALUresult = a >> b[4:0];
-            4'd9: ALUresult = a << b[4:0];
-            4'd10: ALUresult = $signed(a) >>> b[4:0];
+            4'd2: ALUresult = {31'd0,lt};
+            4'd3: ALUresult = {31'd0,ltu};
+            4'd5: ALUresult = a >> b[4:0];
+            4'd1: ALUresult = a << b[4:0];
+            4'd13: ALUresult = $signed(a) >>> b[4:0];
+
+            //IMMsrc neeeded would be {instr[5]|funct3==101 &instr[30],funct3(instr[14:12])}
             //>>> works only for signed expression
             default: ALUresult = 0;//did not want to infer latches
         endcase
