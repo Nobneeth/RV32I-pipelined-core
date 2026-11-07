@@ -2,13 +2,13 @@
 
 module immgen_tb();
 logic [31:0] instr,ImmExt;
-logic [2:0] Immsrc;
+logic [2:0] ImmSrc;
 
 immgen DUT (.*);
 
 task automatic check( input logic [2:0]testsrc,input logic [31:0]testin,testout);
     instr = testin;
-    Immsrc=testsrc;
+    ImmSrc=testsrc;
     #1
     assert (ImmExt === testout) 
     else   $error("erroneous value: %h, Expected value: %h",ImmExt,testout);

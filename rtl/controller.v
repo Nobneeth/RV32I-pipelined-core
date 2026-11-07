@@ -16,7 +16,7 @@ module controller (
     wire Jump, Branch;
     wire [1:0]ALUOp;
     wire BranchTaken;
-    wire Jalr
+    wire Jalr;
     branchcond branchdecision (.BranchTaken(BranchTaken),.eq(eq),.lt(lt),.ltu(ltu),.funct3(funct3));
     maindec maindecoder (.op(op),.RegWrite(RegWrite),.ImmSrc(ImmSrc),.ALUSrc(ALUSrc),.MemWrite(MemWrite),.ResultSrc(ResultSrc),.Branch(Branch),.ALUOp(ALUOp),.Jump(Jump),.Jalr(Jalr));
     aludec ALUdecoder (.ALUOp(ALUOp),.funct3(funct3),.funct7b5(funct7b5),.opb5(op[5]),.ALUControl(ALUControl));
