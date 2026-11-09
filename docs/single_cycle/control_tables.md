@@ -7,9 +7,9 @@ Generated from the RTL in `rtl/`. If the RTL changes, update these tables.
 | Instruction | op | RegWrite | ImmSrc | ALUSrc | MemWrite | ResultSrc | Branch | ALUOp | Jump | Jalr |
 |---|---|---|---|---|---|---|---|---|---|---|
 | `lw` | 0000011 | 1 | 000 (I) | 1 | 0 | 01 (ReadData) | 0 | 00 | 0 | 0 |
-| `sw` | 0100011 | 0 | 001 (S) | 1 | 1 | xx | 0 | 00 | 0 | 0 |
+| `sw` | 0100011 | 0 | 001 (S) | 1 | 1 | 00 | 0 | 00 | 0 | 0 |
 | R-type | 0110011 | 1 | xxx | 0 | 0 | 00 (ALUResult) | 0 | 10 | 0 | 0 |
-| branches (all 6) | 1100011 | 0 | 010 (B) | 0 | 0 | xx | 1 | 01 | 0 | 0 |
+| branches (all 6) | 1100011 | 0 | 010 (B) | 0 | 0 | 00 | 1 | 01 | 0 | 0 |
 | I-type ALU | 0010011 | 1 | 000 (I) | 1 | 0 | 00 (ALUResult) | 0 | 10 | 0 | 0 |
 | `jal` | 1101111 | 1 | 100 (J) | x | 0 | 10 (PCPlus4) | 0 | xx | 1 | 0 |
 | `jalr` | 1100111 | 1 | 000 (I) | 1 | 0 | 10 (PCPlus4) | 0 | 00 | 1 | 1 |
@@ -65,3 +65,5 @@ Why the mask: in I-type, `instr[30]` is an immediate bit (`addi x, x, -1024` has
 | 010 | B | `{{20{instr[31]}}, instr[7], instr[30:25], instr[11:8], 1'b0}` |
 | 011 | U | `{instr[31:12], 12'b0}` (generated, not used yet) |
 | 100 | J | `{{12{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0}` |
+
+`ResultSrc` is `00` (not a don't-care) for `sw` and branches: these instructions write no register, so the value is unused, but the pipeline's load-use check compares `ResultSrcE == 01`, and an `x` there would show as X in simulation.

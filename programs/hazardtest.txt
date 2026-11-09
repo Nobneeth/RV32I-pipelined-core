@@ -1,0 +1,52 @@
+00a00093  //   0: addi x1, x0, 10
+00108113  //   4: addi x2, x1, 1           # rs1 <- M
+00500193  //   8: addi x3, x0, 5
+40300233  //   c: sub  x4, x0, x3          # rs2 <- M
+00700293  //  10: addi x5, x0, 7
+00100313  //  14: addi x6, x0, 1
+006283b3  //  18: add  x7, x5, x6          # rs1 <- W, rs2 <- M
+00100413  //  1c: addi x8, x0, 1
+00200413  //  20: addi x8, x0, 2
+008404b3  //  24: add  x9, x8, x8          # must use 2, not 1  -> 4
+03700013  //  28: addi x0, x0, 55
+00000533  //  2c: add  x10, x0, x0         # must be 0
+06400593  //  30: addi x11, x0, 100        # base address
+0015a023  //  34: sw   x1, 0(x11)          # store data <- forwarded? (x1 is old) ; mem[100]=10
+0005a603  //  38: lw   x12, 0(x11)
+00160693  //  3c: addi x13, x12, 1         # load-use on rs1 -> 11
+0005a703  //  40: lw   x14, 0(x11)
+00e007b3  //  44: add  x15, x0, x14        # load-use on rs2 -> 10
+0005a803  //  48: lw   x16, 0(x11)
+0105a223  //  4c: sw   x16, 4(x11)         # load-use into store data -> mem[104]=10
+04d00893  //  50: addi x17, x0, 77
+0115a423  //  54: sw   x17, 8(x11)         # store data <- M -> mem[108]=77
+0035a623  //  58: sw   x3, 12(x11)         # mem[112]=5
+0005a903  //  5c: lw   x18, 0(x11)
+00c5a903  //  60: lw   x18, 12(x11)        # second load wins
+000909b3  //  64: add  x19, x18, x0        # -> 5
+00300a13  //  68: addi x20, x0, 3
+001a8a93  //  6c: loop:   addi x21, x21, 1
+fffa0a13  //  70: addi x20, x20, -1
+fe0a1ce3  //  74: bne  x20, x0, loop       # rs1 <- M
+0005ab03  //  78: lw   x22, 0(x11)         # 10
+001b0463  //  7c: beq  x22, x1, ok1
+001f8f93  //  80: addi x31, x31, 1
+00000663  //  84: beq  x0, x0, skip
+001f8f93  //  88: addi x31, x31, 1
+001f8f93  //  8c: addi x31, x31, 1
+00c00bef  //  90: jal  x23, func
+000b8c13  //  94: addi x24, x23, 0         # after return
+0140006f  //  98: jal  x0, after
+000b8c93  //  9c: func:   addi x25, x23, 0         # link register used immediately at the target
+000b8067  //  a0: jalr x0, 0(x23)
+001f8f93  //  a4: addi x31, x31, 1         # wrong path after jalr
+001f8f93  //  a8: addi x31, x31, 1
+00400def  //  ac: jal  x27, j15            # x27 = address of j15
+010d8d93  //  b0: j15:    addi x27, x27, 16        # target = j15 + 16
+000d8d67  //  b4: jalr x26, 0(x27)         # rs1 <- M
+001f8f93  //  b8: addi x31, x31, 1         # j15+8: must be skipped
+001f8f93  //  bc: addi x31, x31, 1         # j15+12: must be skipped
+00900e13  //  c0: addi x28, x0, 9          # j15+16: lands here
+01f5a823  //  c4: sw   x31, 16(x11)
+0155aa23  //  c8: sw   x21, 20(x11)
+00000063  //  cc: done:   beq  x0, x0, done

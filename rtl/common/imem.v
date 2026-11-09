@@ -1,6 +1,6 @@
 module imem #(
     parameter WORDS   = 256,              // number of 32-bit words
-    parameter MEMFILE = "riscvtest.txt"   // program image loaded at power-up
+    parameter MEMFILE = "fulltest.mem"    // program image loaded at power-up (also used by synthesis)
 )(
     input clk,                            // unused: read-only, combinational
     input [31:0]a,

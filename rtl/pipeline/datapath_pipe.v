@@ -33,11 +33,9 @@ module datapath_pipe (
     output MemWriteM,
     input  [31:0]ReadDataM
 );
-// hazard signals, tied to 0 until the hazard unit exists
-wire StallF = 1'b0;
-wire StallD = 1'b0;
-wire FlushD = 1'b0;
-wire FlushE = 1'b0;
+// hazard signals, driven by hazard_unit
+wire StallF, StallD, FlushD, FlushE;
+wire [1:0]ForwardAE, ForwardBE;
 
 // Fetch
 reg  [31:0]PCNextF;
@@ -53,6 +51,7 @@ wire [31:0]RD1E, RD2E, ImmExtE, PCE, PCPlus4E;
 wire [4:0]Rs1E, Rs2E, RdE;
 wire [31:0]PCTargetE, ALUResultE;
 wire [31:0]SrcBE, WriteDataE;
+reg  [31:0]SrcAE;
 // Memory (ALUResultM, WriteDataM, MemWriteM, ReadDataM are ports)
 wire RegWriteM;
 wire [1:0]ResultSrcM;
@@ -109,7 +108,17 @@ flopr #(5)  RdE_reg        (.clk(clk),.reset(reset),.A(InstrD[11:7]), .B(RdE));
 
 //rest all are FLOPR
 //E-M operations first.
-assign SrcBE=ALUSrcE?ImmExtE:RD2E;
+//forwarding muxes: 00 regfile, 01 from W, 10 from M
+always @(*) begin
+    case (ForwardAE)
+        2'b10:   SrcAE = ALUResultM;
+        2'b01:   SrcAE = ResultW;
+        default: SrcAE = RD1E;
+    endcase
+end
+assign WriteDataE = (ForwardBE==2'b10) ? ALUResultM :
+                    (ForwardBE==2'b01) ? ResultW : RD2E;
+assign SrcBE=ALUSrcE?ImmExtE:WriteDataE;
 assign PCTargetE = PCE+ImmExtE;
 always @(*) begin
     case (ResultSrcW)
@@ -118,8 +127,7 @@ always @(*) begin
             default: ResultW = ALUResultW;
         endcase
 end
-alu ALU (.a(RD1E),.b(SrcBE),.ALUControl(ALUControlE),.eq(eqE),.lt(ltE),.ltu(ltuE),.ALUResult(ALUResultE));
-assign WriteDataE = RD2E;
+alu ALU (.a(SrcAE),.b(SrcBE),.ALUControl(ALUControlE),.eq(eqE),.lt(ltE),.ltu(ltuE),.ALUResult(ALUResultE));
 
 //E-M regs
 flopr #(1)  RegWriteEM_reg  (.clk(clk),.reset(reset),.A(RegWriteE),  .B(RegWriteM));
@@ -139,5 +147,10 @@ flopr #(32) ALUResultMW_reg (.clk(clk),.reset(reset),.A(ALUResultM), .B(ALUResul
 flopr #(32) ReadDataMW_reg  (.clk(clk),.reset(reset),.A(ReadDataM),  .B(ReadDataW));
 flopr #(32) PCPlus4MW_reg   (.clk(clk),.reset(reset),.A(PCPlus4M),   .B(PCPlus4W));
 flopr #(5)  RdMW_reg        (.clk(clk),.reset(reset),.A(RdM),        .B(RdW));
+
+//hazard unit added
+hazard_unit HU (.Rs1E(Rs1E),.Rs2E(Rs2E),.RdM(RdM),.RdW(RdW),.RegWriteM(RegWriteM),.RegWriteW(RegWriteW),
+                .Rs1D(InstrD[19:15]),.Rs2D(InstrD[24:20]),.RdE(RdE),.ResultSrcE(ResultSrcE),.PCSrcE(PCSrcE),
+                .ForwardAE(ForwardAE),.ForwardBE(ForwardBE),.StallF(StallF),.StallD(StallD),.FlushD(FlushD),.FlushE(FlushE));
 
 endmodule

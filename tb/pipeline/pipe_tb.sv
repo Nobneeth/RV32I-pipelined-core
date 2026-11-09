@@ -44,8 +44,11 @@ module pipe_tb ();
     endtask
 
     initial begin
-        // padding moves the jal return address, so the book's "25 at address 100" check does not apply here;
-        // the full register + memory comparison covers it
+        // unpadded programs: need forwarding, load-use stalls and branch flushes
+        run("riscvtest.txt",      "riscvtest_expected.txt");
+        run("fulltest.txt",       "fulltest_expected.txt");
+        run("hazardtest.txt",     "hazardtest_expected.txt");
+        // NOP-padded programs: no hazards at all (pipeline structure only)
         run("riscvtest_pad2.txt", "riscvtest_pad2_expected.txt");
         run("fulltest_pad2.txt",  "fulltest_pad2_expected.txt");
 
