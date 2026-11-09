@@ -9,7 +9,7 @@ module regfile(
     output  [31:0]d2out
 );
 reg [31:0]r[31:0];
-//asper RV32I, the r0 is always 0. 
+//as per RV32I, x0 is always 0.
 //we can hardwire it to 0 inside clk but it costs heavily because we are assigning 0 to 32 bits every clock cycle.
 //hence instead we choose to output 0 whenever rs1/rs2 = 0.
 
@@ -18,10 +18,10 @@ assign d1out=(rs1==0)?32'b0:r[rs1];
 //combinationally because they dont depend on clock. only write does
 
 always @(negedge clk) begin
-    //reads dont need to be clocked like in FIFO 
+    //negedge write: Writeback writes in the first half cycle, Decode reads in the second half
     if (we && rd!=0) begin
         r[rd]<=din;
     end
 end
 
-endmodule
+endmodule

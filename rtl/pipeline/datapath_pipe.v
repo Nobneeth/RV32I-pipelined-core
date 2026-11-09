@@ -1,5 +1,4 @@
-// how data flows through
-//control is complete. now how data flows through
+// 5-stage pipelined datapath (Harris Figure 7.61) with hazard unit
 
 module datapath_pipe (
     input clk,
@@ -103,11 +102,9 @@ flopr #(32) PCPlus4E_reg   (.clk(clk),.reset(reset),.A(PCPlus4D),     .B(PCPlus4
 flopr #(5)  Rs1E_reg       (.clk(clk),.reset(reset),.A(InstrD[19:15]),.B(Rs1E));
 flopr #(5)  Rs2E_reg       (.clk(clk),.reset(reset),.A(InstrD[24:20]),.B(Rs2E));
 flopr #(5)  RdE_reg        (.clk(clk),.reset(reset),.A(InstrD[11:7]), .B(RdE));
-//added addresses of datas the regfile inputs and outputs 
+//Rs1E, Rs2E, RdE: register addresses carried along for the hazard unit
 
-
-//rest all are FLOPR
-//E-M operations first.
+//Execute stage
 //forwarding muxes: 00 regfile, 01 from W, 10 from M
 always @(*) begin
     case (ForwardAE)

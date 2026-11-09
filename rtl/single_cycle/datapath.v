@@ -1,5 +1,4 @@
-// how data flows through
-//control is complete. now how data flows through
+// single-cycle datapath (Harris Figure 7.15, extended for jalr and all six branches)
 
 module datapath (
     input clk,
@@ -10,7 +9,7 @@ module datapath (
     input [2:0]ImmSrc,
     input [3:0]ALUControl,
     input [1:0]ResultSrc,
-    output eq,//becayse these are inside always block in the alu block
+    output eq,//ALU flags, to the controller
     output lt,
     output ltu,
     input [31:0]Instr,
@@ -47,4 +46,4 @@ immgen Imm_gen (.ImmSrc(ImmSrc),.instr(Instr),.ImmExt(ImmExt));
         if(reset) PC<=32'd0;
         else PC<=PCNext;
     end
-endmodule
+endmodule

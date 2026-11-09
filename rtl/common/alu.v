@@ -1,7 +1,5 @@
-//what all does an ALU needs to do in riscV?
-//add , sub, and, or, xor
-//setl less than SLT, Unsigned set less thanSLTU
-//srl,sll,sra
+// RV32I ALU: add, sub, and, or, xor, slt, sltu, sll, srl, sra.
+// ALUControl = {instr[30], funct3}; flags eq/lt/ltu feed branchcond.
 
 
 module alu (
@@ -11,11 +9,7 @@ module alu (
     output reg [31:0] ALUResult,//will be synthesized to wire if default given.
     output lt, output eq, output ltu
 );
-    //ALU is purely combinational block
-    //assuming ADD 0000 sub 0001 and 0010 or 0011 xor 0100 slt 0101 sltu 1101(giving this so that the 4th bit can be used for unsigned for combination _101)
-    //srl 1000, sll 1001, sra 1010
-    // not using case statements because it can infer latches. using with default
-    // the comparisions are always unsigned byy default. because default for ports is unsigned
+    //purely combinational. comparisons are unsigned by default (ports are unsigned), so lt needs $signed
     
     assign lt = $signed(a) < $signed(b)  ;
     assign eq = (a==b);
@@ -32,13 +26,9 @@ module alu (
             4'd5: ALUResult = a >> b[4:0];
             4'd1: ALUResult = a << b[4:0];
             4'd13: ALUResult = $signed(a) >>> b[4:0];
-
-            //IMMsrc neeeded would be {instr[5]|funct3==101 &instr[30],funct3(instr[14:12])}
-            //>>> works only for signed expression
+            //>>> is arithmetic only on a signed operand
             default: ALUResult = 0;//did not want to infer latches
         endcase
     end
 
-    // can use case statements but it could create latch.
-    
 endmodule

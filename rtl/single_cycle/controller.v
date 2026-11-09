@@ -24,10 +24,10 @@ module controller (
     always @(*) begin
         
         case ({op})
-            7'b1100011: PCSrc = BranchTaken?2'd1:2'd0;//branchtaken aand branch
+            7'b1100011: PCSrc = BranchTaken?2'd1:2'd0;//branch taken
             7'b1101111: PCSrc = 2'd1;//jump
             7'b1100111: PCSrc = 2'd2; //jalr
             default: PCSrc=2'd0;
         endcase
     end
-endmodule
+endmodule

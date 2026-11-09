@@ -1,7 +1,7 @@
-module controller_D (//D fro decode stage
-    input [6:0]op,//from InstrE
-    input [2:0]funct3,//from IntrE
-    input funct7b5,//from IntrE
+module controller_D (//D for decode stage
+    input [6:0]op,//from InstrD
+    input [2:0]funct3,//from InstrD
+    input funct7b5,//from InstrD
     //input eq,
     //input lt,
     //input ltu,
@@ -26,7 +26,7 @@ module controller_D (//D fro decode stage
 
     //always @(*) begin    
     //    case ({op})
-    //        7'b1100011: PCSrc = BranchTaken?2'd1:2'd0;//branchtaken aand branch
+    //        7'b1100011: PCSrc = BranchTaken?2'd1:2'd0;//branch taken
     //        7'b1101111: PCSrc = 2'd1;//jump
     //        7'b1100111: PCSrc = 2'd2; //jalr
     //        default: PCSrc=2'd0;

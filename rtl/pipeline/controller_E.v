@@ -1,14 +1,14 @@
 module controller_E (
     //input [6:0]op,
-    input [2:0]funct3E,//from 
+    input [2:0]funct3E,//from D->E
     //input funct7b5,
     input eq,//from alu
     input lt,//from alu
     input ltu,//from alu
     input JumpE,
-    input BranchE,//from packet DtoE
+    input BranchE,//from D->E
     //input [1:0]ALUOp;
-    input JalrE,//D-E
+    input JalrE,//from D->E
     output [1:0]PCSrcE
     //output [1:0]ResultSrc,
     //output MemWrite,
@@ -26,4 +26,4 @@ module controller_E (
 
     assign PCSrcE = JalrE?2'b10:((BranchE & BranchTakenE)|JumpE)?2'b01:2'b00;
 
-endmodule
+endmodule
