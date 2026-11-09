@@ -1,5 +1,7 @@
 """Tiny RV32I assembler + reference simulator for the rv32i-pipelined-core subset.
-Usage: python rvasm.py prog.s   -> writes prog.txt (imem image) and prog_expected.txt (final x0..x31, then dmem words 0..63)
+Usage: python rvasm.py prog.s [--pad N]
+  -> writes prog.txt (imem image) and prog_expected.txt (final x0..x31, then dmem words 0..63)
+  --pad N inserts N NOPs (addi x0,x0,0) after every instruction and writes prog_padN.*
 """
 import re, sys
 
@@ -16,7 +18,7 @@ B = {'beq': 0, 'bne': 1, 'blt': 4, 'bge': 5, 'bltu': 6, 'bgeu': 7}
 def num(s): return int(s, 0)
 def reg(s): return REGS[s.strip()]
 
-def parse(src):
+def parse(src, pad=0):
     lines, labels, pc = [], {}, 0
     for raw in src.splitlines():
         line = raw.split('#')[0].strip()
@@ -24,6 +26,8 @@ def parse(src):
             lab, line = line.split(':', 1); labels[lab.strip()] = pc; line = line.strip()
         if line:
             lines.append((pc, line, raw.strip())); pc += 4
+            for _ in range(pad):
+                lines.append((pc, 'addi x0, x0, 0', 'nop (padding)')); pc += 4
     return lines, labels
 
 def encode(pc, line, labels):
@@ -84,7 +88,9 @@ def simulate(words, max_steps=10000):
 
 if __name__ == '__main__':
     src = open(sys.argv[1]).read(); base = sys.argv[1].rsplit('.', 1)[0]
-    lines, labels = parse(src)
+    pad = int(sys.argv[sys.argv.index('--pad') + 1]) if '--pad' in sys.argv else 0
+    if pad: base += f'_pad{pad}'
+    lines, labels = parse(src, pad)
     words = [encode(pc, l, labels) for pc, l, _ in lines]
     with open(base + '.txt', 'w') as f:
         for (pc, _, raw), w in zip(lines, words): f.write(f'{w:08x}  // {pc:3x}: {raw}\n')

@@ -17,7 +17,7 @@ assign d2out=(rs2==0)?32'b0:r[rs2];
 assign d1out=(rs1==0)?32'b0:r[rs1];
 //combinationally because they dont depend on clock. only write does
 
-always @(posedge clk) begin
+always @(negedge clk) begin
     //reads dont need to be clocked like in FIFO 
     if (we && rd!=0) begin
         r[rd]<=din;

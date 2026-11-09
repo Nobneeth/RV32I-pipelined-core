@@ -1,0 +1,63 @@
+00500113  //   0: main:   addi x2, x0, 5
+00000013  //   4: nop (padding)
+00000013  //   8: nop (padding)
+00c00193  //   c: addi x3, x0, 12
+00000013  //  10: nop (padding)
+00000013  //  14: nop (padding)
+ff718393  //  18: addi x7, x3, -9
+00000013  //  1c: nop (padding)
+00000013  //  20: nop (padding)
+0023e233  //  24: or   x4, x7, x2
+00000013  //  28: nop (padding)
+00000013  //  2c: nop (padding)
+0041f2b3  //  30: and  x5, x3, x4
+00000013  //  34: nop (padding)
+00000013  //  38: nop (padding)
+004282b3  //  3c: add  x5, x5, x4
+00000013  //  40: nop (padding)
+00000013  //  44: nop (padding)
+08728863  //  48: beq  x5, x7, end
+00000013  //  4c: nop (padding)
+00000013  //  50: nop (padding)
+0041a233  //  54: slt  x4, x3, x4
+00000013  //  58: nop (padding)
+00000013  //  5c: nop (padding)
+00020c63  //  60: beq  x4, x0, around
+00000013  //  64: nop (padding)
+00000013  //  68: nop (padding)
+00000293  //  6c: addi x5, x0, 0
+00000013  //  70: nop (padding)
+00000013  //  74: nop (padding)
+0023a233  //  78: around: slt  x4, x7, x2
+00000013  //  7c: nop (padding)
+00000013  //  80: nop (padding)
+005203b3  //  84: add  x7, x4, x5
+00000013  //  88: nop (padding)
+00000013  //  8c: nop (padding)
+402383b3  //  90: sub  x7, x7, x2
+00000013  //  94: nop (padding)
+00000013  //  98: nop (padding)
+0471aa23  //  9c: sw   x7, 84(x3)
+00000013  //  a0: nop (padding)
+00000013  //  a4: nop (padding)
+06002103  //  a8: lw   x2, 96(x0)
+00000013  //  ac: nop (padding)
+00000013  //  b0: nop (padding)
+005104b3  //  b4: add  x9, x2, x5
+00000013  //  b8: nop (padding)
+00000013  //  bc: nop (padding)
+018001ef  //  c0: jal  x3, end
+00000013  //  c4: nop (padding)
+00000013  //  c8: nop (padding)
+00100113  //  cc: addi x2, x0, 1
+00000013  //  d0: nop (padding)
+00000013  //  d4: nop (padding)
+00910133  //  d8: end:    add  x2, x2, x9
+00000013  //  dc: nop (padding)
+00000013  //  e0: nop (padding)
+0221a023  //  e4: sw   x2, 0x20(x3)
+00000013  //  e8: nop (padding)
+00000013  //  ec: nop (padding)
+00210063  //  f0: done:   beq  x2, x2, done
+00000013  //  f4: nop (padding)
+00000013  //  f8: nop (padding)
